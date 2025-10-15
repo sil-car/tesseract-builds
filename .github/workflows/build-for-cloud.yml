@@ -59,10 +59,10 @@ jobs:
             --disable-graphics \
             --disable-shared \
             --enable-openmp \
-            'CXX=g++` \
+            'CXX=g++' \
             'CXXFLAGS=-g -O2 -fno-math-errno -Wall -Wextra -Wpedantic'
-            echo $PWD
-            ls -l .
+          echo $PWD
+          ls -l .
     
       - name: Make Tesseract
         run: |

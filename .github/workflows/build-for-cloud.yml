@@ -66,10 +66,12 @@ jobs:
     
       - name: Make Tesseract
         run: |
+          cd bin/release
           make
           ls -l .
 
       - name: Make Training
         run: |
+          cd bin/release
           make training
           ls -l .

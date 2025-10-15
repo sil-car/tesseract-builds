@@ -18,40 +18,58 @@ on:
         required: true
         type: string
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Install deps
-        run: |
-          sudo apt-get install -y \
-            libleptonica-dev
-    
+      # https://github.com/tesseract-ocr/tesseract/blob/main/.github/workflows/autotools-openmp.yml
       - name: Get source code
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v4
         with:
           repository: tesseract-ocr/tesseract
           ref: ${{ inputs.version }}
           fetch-depth: 1
 
-      # Runs a set of commands using the runners shell
-      - name: Build tesseract executables
+      - name: Install deps
         run: |
-          echo "Run autogen"
+          sudo apt-get update
+          sudo apt-get install -y \
+            curl \
+            libarchive-dev \
+            libcairo2-dev \
+            libcurl4 \
+            libcurl4-openssl-dev \
+            libleptonica-dev \
+            libpango1.0-dev
+
+      - name: Setup Tesseract
+        run: |
           ./autogen.sh
+          echo $PWD
+          ls -l .
+
+      - name: Configure Tesseract
+        run: |
           mkdir -p bin/release
           cd bin/release
           ../../configure \
-              --disable-debug \
-              --disable-graphics \
-              --disable-shared \
-              'CXXFLAGS=-g -O2 -fno-math-errno -Wall -Wextra -Wpedantic'
+            --disable-debug \
+            --disable-doc \
+            --disable-graphics \
+            --disable-shared \
+            --enable-openmp \
+            'CXX=g++` \
+            'CXXFLAGS=-g -O2 -fno-math-errno -Wall -Wextra -Wpedantic'
+            echo $PWD
+            ls -l .
+    
+      - name: Make Tesseract
+        run: |
           make
+          ls -l .
+
+      - name: Make Training
+        run: |
           make training
           ls -l .

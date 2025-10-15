@@ -92,14 +92,12 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
 
-      - name: list
-        run: |
-          echo $PWD
-          ls -l $PWD
+      - name: Compress files
+        run: zip -r ${{ inputs.version }}.zip ${{ inputs.version }}
 
       - name: Create draft release
         uses: softprops/action-gh-release@v2        
         with:
           tag_name: ${{ inputs.version }}
           draft: true
-          files: '*'
+          files: ${{ inputs.version }}.zip

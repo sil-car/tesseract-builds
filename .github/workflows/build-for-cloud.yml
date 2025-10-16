@@ -46,14 +46,10 @@ jobs:
       - name: Setup Tesseract
         run: |
           ./autogen.sh
-          echo $PWD
-          ls -l .
 
       - name: Configure Tesseract
         run: |
-          mkdir -p bin/release
-          cd bin/release
-          ../../configure \
+          ../configure \
             --disable-debug \
             --disable-doc \
             --disable-graphics \
@@ -62,29 +58,24 @@ jobs:
             --prefix=$PWD/dist \
             'CXX=g++' \
             'CXXFLAGS=-g -O2 -fno-math-errno -Wall -Wextra -Wpedantic'
-          echo $PWD
-          ls -l .
     
       - name: Make Tesseract
         run: |
-          cd bin/release
           make -j $(nproc)
 
       - name: Make Training
         run: |
-          cd bin/release
           make training -j $(nproc)
 
       - name: Install binaries
         run: |
-          cd bin/release
-          sudo make --debug=v install training-install
+          sudo make --debug=b install training-install
 
       - name: Upload built files
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.version }}
-          path: bin/release/dist
+          path: dist
 
   release:
     runs-on: ubuntu-latest

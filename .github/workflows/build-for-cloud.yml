@@ -59,6 +59,7 @@ jobs:
             --disable-graphics \
             --disable-shared \
             --enable-openmp \
+            --prefix=./dist \
             'CXX=g++' \
             'CXXFLAGS=-g -O2 -fno-math-errno -Wall -Wextra -Wpedantic'
           echo $PWD
@@ -67,21 +68,23 @@ jobs:
       - name: Make Tesseract
         run: |
           cd bin/release
-          make
-          ls -l .
+          make -j $(nproc)
 
       - name: Make Training
         run: |
           cd bin/release
-          make training
-          echo $PWD
-          ls -l .
+          make training -j $(nproc)
+
+      - name: Install binaries
+        run: |
+          cd bin/release
+          sudo make --debug=v install training-install
 
       - name: Upload built files
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.version }}
-          path: bin/release
+          path: bin/release/dist
 
   release:
     runs-on: ubuntu-latest

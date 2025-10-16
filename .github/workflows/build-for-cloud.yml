@@ -59,7 +59,7 @@ jobs:
             --disable-graphics \
             --disable-shared \
             --enable-openmp \
-            --prefix=./dist \
+            --prefix=$PWD/dist \
             'CXX=g++' \
             'CXXFLAGS=-g -O2 -fno-math-errno -Wall -Wextra -Wpedantic'
           echo $PWD

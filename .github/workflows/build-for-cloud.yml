@@ -49,7 +49,7 @@ jobs:
 
       - name: Configure Tesseract
         run: |
-          ../configure \
+          ./configure \
             --disable-debug \
             --disable-doc \
             --disable-graphics \

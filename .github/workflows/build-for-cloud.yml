@@ -51,13 +51,14 @@ jobs:
           ./autogen.sh
 
       - name: Configure Tesseract
+        # OpenMP disabled b/c of inefficiencies https://github.com/tesseract-ocr/tesstrain/issues/259
         run: |
           ./configure \
             --disable-debug \
             --disable-doc \
             --disable-graphics \
             --disable-shared \
-            --enable-openmp \
+            --disable-openmp \
             --prefix=$PWD/dist \
             'CXX=g++' \
             'CXXFLAGS=-g -O2 -fno-math-errno -Wall -Wextra -Wpedantic'
